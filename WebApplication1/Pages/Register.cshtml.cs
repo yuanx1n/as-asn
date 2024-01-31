@@ -29,6 +29,8 @@ namespace WebApplication1.Pages
         {
         }
 
+        //prevent injection attack
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
