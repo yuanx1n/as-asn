@@ -53,7 +53,6 @@ namespace WebApplication1.ViewModels
 
 
         //jpg only 
-        [FileExtensions(Extensions = "jpg,jpeg", ErrorMessage = "Only .jpg or .jpeg files are allowed")]
         public IFormFile Photo { get; set; } // Add a property to accept the uploaded photo file
-    }
+    }   
 }

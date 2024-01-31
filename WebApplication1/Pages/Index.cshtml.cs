@@ -1,20 +1,46 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Model;
+using Microsoft.AspNetCore.Authorization;
 
-namespace WebApplication1.Pages
+[Authorize]
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+
+    private readonly ILogger<IndexModel> _logger;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public IndexModel(ILogger<IndexModel> logger, UserManager<ApplicationUser> userManager)
     {
-        private readonly ILogger<IndexModel> _logger;
+        _logger = logger;
+        _userManager = userManager;
+    }
 
-        public IndexModel(ILogger<IndexModel> logger)
+    public ApplicationUser CurrentUser { get; set; }
+
+    public async Task<IActionResult> OnGetAsync()
+    {
+        // Check if User property is not null
+        if (User != null)
         {
-            _logger = logger;
+            // Retrieve the current user
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                //encryption
+                var dataProtectionProvider = DataProtectionProvider.Create("EncryptData");
+                var protector = dataProtectionProvider.CreateProtector("MySecretKey");
+
+                // You might want to decrypt sensitive data here before displaying it
+                // For simplicity, assuming the CreditCardNo property is decrypted already
+                CurrentUser = user;
+                CurrentUser.CreditCardNo = protector.Unprotect(user.CreditCardNo);
+            }
         }
 
-        public void OnGet()
-        {
-
-        }
+        return Page();
     }
 }

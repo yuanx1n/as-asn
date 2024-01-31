@@ -1,10 +1,54 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Profile Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyowO8AMwLXDlkwg62KlId2l9z/RbZZJj6"
+          crossorigin="anonymous" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 60px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .profile-image {
+            max-width: 200px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1 class="display-4">Welcome, @Model.CurrentUser.FirstName @Model.CurrentUser.LastName!</h1>
+            @if (Model.CurrentUser.Pfp != null && Model.CurrentUser.Pfp.Length > 0)
+            {
+                var base64Image = Convert.ToBase64String(Model.CurrentUser.Pfp);
+                <img src="data:image/jpeg;base64,@base64Image" alt="User Image" class="profile-image" />
+            }
+            <p>Email: @Model.CurrentUser.Email</p>
+            <p>Phone Number: @Model.CurrentUser.PhoneNumber</p>
+            <p>Billing Address: @Model.CurrentUser.BillingAddress</p>
+            <p>Shipping Address: @Model.CurrentUser.ShippingAddress</p>
+            <p>Encrypted Credit Card: @Model.CurrentUser.CreditCardNo</p>
+
+          
+        </div>
+    </div>
+</body>
+</html>
