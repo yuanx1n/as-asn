@@ -9,8 +9,8 @@ using Microsoft.Extensions.Options;
 [Authorize]
 public class IndexModel : PageModel
 {
-
-    private readonly ILogger<IndexModel> _logger;
+	public bool ChangePasswordPrompt { get; set; }
+	private readonly ILogger<IndexModel> _logger;
     private readonly IOptions<SessionOptions> sessionOptions;
     private readonly UserManager<ApplicationUser> _userManager;
 
@@ -47,8 +47,20 @@ public class IndexModel : PageModel
                 // For simplicity, assuming the CreditCardNo property is decrypted already
                 CurrentUser = user;
                 CurrentUser.CreditCardNo = protector.Unprotect(user.CreditCardNo);
-            }
-        }
+				var maxPasswordAge = TimeSpan.FromMinutes(2); // Set your desired maximum password age
+
+				if (user.LastPasswordChange != null)
+				{
+					var timeSinceLastChange = DateTime.UtcNow - user.LastPasswordChange;
+
+					if (timeSinceLastChange > maxPasswordAge)
+					{
+						ChangePasswordPrompt = true;
+					}
+				}
+
+			}
+		}
 
         return Page();
     }

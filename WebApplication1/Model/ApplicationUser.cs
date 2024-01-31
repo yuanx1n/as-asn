@@ -11,5 +11,7 @@ namespace WebApplication1.Model
         public string? BillingAddress {  get; set; }
         public string? ShippingAddress {  get; set; }
         public byte[]? Pfp { get; set; } // Add property to store user's photo
-    }
+		public DateTime? LastPasswordChange { get; set; }
+
+	}
 }
