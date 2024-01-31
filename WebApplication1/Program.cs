@@ -1,3 +1,4 @@
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Identity;
 using WebApplication1.Model;
 
@@ -15,6 +16,9 @@ builder.Services.AddDataProtection();
 
 //implement audit log methods here
 builder.Services.AddScoped<AuditLogService>();
+
+//recaptcha
+builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
 
 //session management
 builder.Services.AddDistributedMemoryCache();

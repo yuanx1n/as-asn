@@ -1,3 +1,4 @@
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -44,6 +45,7 @@ namespace WebApplication1.Pages
 			return Page();
 		}
 
+		[ValidateReCaptcha]
 		private async Task<bool> TryLoginAsync()
 		{
 			//search if login info is correct
