@@ -35,7 +35,7 @@
 <body>
     <div class="container mt-5">
         <div class="text-center">
-            <h1 class="display-4">Welcome, @Model.CurrentUser.FirstName @Model.CurrentUser.LastName!</h1>
+            <h1 class="display-4">Welcome, @HttpContext.Session.GetString("FirstName") @HttpContext.Session.GetString("LastName")!</h1>
             @if (Model.CurrentUser.Pfp != null && Model.CurrentUser.Pfp.Length > 0)
             {
                 var base64Image = Convert.ToBase64String(Model.CurrentUser.Pfp);
@@ -47,7 +47,7 @@
             <p>Shipping Address: @Model.CurrentUser.ShippingAddress</p>
             <p>Encrypted Credit Card: @Model.CurrentUser.CreditCardNo</p>
 
-          
+            <p><a href="changepass">Change Password</a></p>
         </div>
     </div>
 </body>

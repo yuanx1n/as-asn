@@ -26,8 +26,11 @@ namespace WebApplication1.Pages
 			var user = await userManager.GetUserAsync(User);
 
 			await signInManager.SignOutAsync();
-			//log logout
-			if (user != null)
+            // Clear session 
+            HttpContext.Session.Clear();
+
+            //log logout
+            if (user != null)
 			{
 				auditLogService.LogLogout(user.Id);
 			}

@@ -6,6 +6,7 @@ using WebApplication1.ViewModels;
 
 namespace WebApplication1.Pages
 {
+
 	public class LoginModel : PageModel
 	{
 		[BindProperty]
@@ -55,7 +56,9 @@ namespace WebApplication1.Pages
 
 				// Log successful login
 				auditLogService.LogSuccessfulLogin(user.Id);
-				return true;
+
+
+                return true;
 			}
 			//if locked out
 			if (result.IsLockedOut)
@@ -91,8 +94,9 @@ namespace WebApplication1.Pages
 					auditLogService.LogFailedLogin(user.Id, "Invalid login attempt. Remaining attempts: {maxAttempts - remainingAttempts}");
 				}
 			}
+            ModelState.AddModelError("", "Email or password is incorrect.");
 
-			return false;
+            return false;
 		}
 	}
 }

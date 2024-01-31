@@ -4,17 +4,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 
 [Authorize]
 public class IndexModel : PageModel
 {
 
     private readonly ILogger<IndexModel> _logger;
+    private readonly IOptions<SessionOptions> sessionOptions;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public IndexModel(ILogger<IndexModel> logger, UserManager<ApplicationUser> userManager)
+    public IndexModel(ILogger<IndexModel> logger,IOptions<SessionOptions> sessionOptions ,UserManager<ApplicationUser> userManager)
     {
         _logger = logger;
+        this.sessionOptions = sessionOptions;
         _userManager = userManager;
     }
 
@@ -28,8 +31,14 @@ public class IndexModel : PageModel
             // Retrieve the current user
             var user = await _userManager.GetUserAsync(User);
 
+
             if (user != null)
             {
+                // Store user information in the session
+                HttpContext.Session.SetString("UserId", user.Id);
+                HttpContext.Session.SetString("FirstName", user.FirstName);
+                HttpContext.Session.SetString("LastName", user.LastName);
+
                 //encryption
                 var dataProtectionProvider = DataProtectionProvider.Create("EncryptData");
                 var protector = dataProtectionProvider.CreateProtector("MySecretKey");
