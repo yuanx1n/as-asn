@@ -47,7 +47,14 @@
             <p>Shipping Address: @Model.CurrentUser.ShippingAddress</p>
             <p>Encrypted Credit Card: @Model.CurrentUser.CreditCardNo</p>
 
-            <p><a href="changepass">Change Password</a></p>
+            @if (Model.ChangePasswordPrompt)
+            {
+                <p><strong><a href="changepass">PLEASE CHANGE PASSWORD NOW</a></strong></p>
+            }
+            else
+            {
+                <p><a href="changepass">Change Password</a></p>
+            }
         </div>
     </div>
 </body>
