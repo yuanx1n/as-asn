@@ -1,0 +1,100 @@
+﻿@page
+@model WebApplication1.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register for Bookworms Online!";
+}
+<div class="container mt-5">
+
+	<div class="row justify-content-center align-items-center">
+
+		<div class="col-sm-12 col-md-12 col-lg-4">
+			<h1 class="mb-3">Register </h1>
+
+            <form method="post" enctype="multipart/form-data">
+				<div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.FName"></label>
+                    <input asp-for="RModel.FName" class="form-control" />
+                    <span asp-validation-for="RModel.FName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.LName"></label>
+                    <input asp-for="RModel.LName" class="form-control" />
+                    <span asp-validation-for="RModel.LName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.CCNo"></label>
+                    <input asp-for="RModel.CCNo" class="form-control" />
+                    <span asp-validation-for="RModel.CCNo" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.MobileNo"></label>
+                    <input asp-for="RModel.MobileNo" class="form-control" />
+                    <span asp-validation-for="RModel.MobileNo" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.BillingAddress"></label>
+                    <input asp-for="RModel.BillingAddress" class="form-control" />
+                    <span asp-validation-for="RModel.BillingAddress" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.ShippingAddress"></label>
+                    <input asp-for="RModel.ShippingAddress" class="form-control" />
+                    <span asp-validation-for="RModel.ShippingAddress" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.Email"></label>
+                    <input asp-for="RModel.Email" class="form-control" />
+                    <span asp-validation-for="RModel.Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.Password"></label>
+                    <input asp-for="RModel.Password" id="RModel_Password" type="password" class="form-control" />
+                    <span asp-validation-for="RModel.Password" class="text-danger"></span>
+                    <span id="passwordError" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RModel.ConfirmPassword"></label>
+                    <input asp-for="RModel.ConfirmPassword" type="password" class="form-control" />
+                    <span asp-validation-for="RModel.ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" asp-for="RModel.Photo">Profile Picture</label>
+                    <input type="file" asp-for="RModel.Photo" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+			</form>
+		</div>
+	</div>
+</div>
+
+@*password check *@
+@section Scripts {
+    <script>
+        function validatePassword() {
+            var password = document.getElementById("RModel_Password").value;
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{12,}$/;
+
+            @*feedback on password*@
+            if (!passwordRegex.test(password)) {
+                document.getElementById("passwordError").innerHTML = "Password must include lowercase, uppercase, number, and special character.";
+                return false;
+            }
+
+            document.getElementById("passwordError").innerHTML = "";
+            return true;
+        }
+    </script>
+}
