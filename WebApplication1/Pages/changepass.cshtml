@@ -18,8 +18,10 @@
 
                 <div class="mb-3">
                     <label class="form-label" asp-for="ChangePasswordModel.newPass">New Password</label>
-                    <input type="password" asp-for="ChangePasswordModel.newPass" class="form-control" />
+                    <input type="password" asp-for="ChangePasswordModel.newPass" id="ChangePasswordModel_newPass"class="form-control" oninput="checkPasswordStrength()" />
                     <span asp-validation-for="ChangePasswordModel.newPass" class="text-danger"></span>
+                    <span id="passwordError" class="text-danger"></span>
+                    <div id="passwordStrength" class="mt-2"></div>
                 </div>
 
                 <div class="mb-3">
@@ -35,3 +37,101 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        function checkPasswordStrength() {
+            var password = document.getElementById("ChangePasswordModel_newPass").value;
+            var criteriaMet = calculatePasswordStrength(password);
+
+            if (criteriaMet === 5) {
+                document.getElementById("passwordError").innerHTML = "";
+                updatePasswordStrength('strong');
+            } else {
+                var missingCriteria = getMissingCriteria(password);
+                document.getElementById("passwordError").innerHTML = "Password is missing: " + missingCriteria;
+
+                if (criteriaMet >= 3) {
+                    updatePasswordStrength('medium');
+                } else {
+                    updatePasswordStrength('weak');
+                }
+            }
+        }
+
+        function calculatePasswordStrength(password) {
+            var criteriaMet = 0;
+
+            // Check for uppercase
+            if (/[A-Z]/.test(password)) {
+                criteriaMet++;
+            }
+
+            // Check for lowercase
+            if (/[a-z]/.test(password)) {
+                criteriaMet++;
+            }
+
+            // Check for special character
+            if (/[!#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password)) {
+                criteriaMet++;
+            }
+
+            // Check for numbers
+            if (/\d/.test(password)) {
+                criteriaMet++;
+            }
+
+            // Check for length greater than or equal to 12
+            if (password.length >= 12) {
+                criteriaMet++;
+            }
+
+            return criteriaMet;
+        }
+
+        function getMissingCriteria(password) {
+            var missingCriteria = [];
+
+            // Check for missing uppercase
+            if (!/[A-Z]/.test(password)) {
+                missingCriteria.push("uppercase");
+            }
+
+            // Check for missing lowercase
+            if (!/[a-z]/.test(password)) {
+                missingCriteria.push("lowercase");
+            }
+
+            // Check for missing special character
+            if (!/[!#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password)) {
+                missingCriteria.push("special character");
+            }
+
+            // Check for missing numbers
+            if (!/\d/.test(password)) {
+                missingCriteria.push("numbers");
+            }
+
+            // Check for length less than 12
+            if (password.length < 12) {
+                missingCriteria.push("at least 12 characters");
+            }
+
+            return missingCriteria.join(", ");
+        }
+
+        function updatePasswordStrength(strength) {
+            var strengthElement = document.getElementById("passwordStrength");
+            strengthElement.innerHTML = "Password Strength: " + strength;
+
+            // Apply color based on strength
+            if (strength === 'weak') {
+                strengthElement.style.color = 'red';
+            } else if (strength === 'medium') {
+                strengthElement.style.color = 'orange';
+            } else {
+                strengthElement.style.color = 'green';
+            }
+        }
+    </script>
+}
