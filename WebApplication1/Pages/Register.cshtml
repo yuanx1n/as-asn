@@ -58,10 +58,12 @@
 
                 <div class="form-group">
                     <label asp-for="RModel.Password">Password</label>
-                    <input asp-for="RModel.Password" id="RModel_Password" type="password" class="form-control" />
+                    <input asp-for="RModel.Password" id="RModel_Password" type="password" class="form-control" oninput="checkPasswordStrength()" />
                     <span asp-validation-for="RModel.Password" class="text-danger"></span>
                     <span id="passwordError" class="text-danger"></span>
+                    <div id="passwordStrength" class="mt-2"></div>
                 </div>
+
 
                 <div class="form-group">
                     <label asp-for="RModel.ConfirmPassword">Confirm Password</label>
@@ -82,21 +84,102 @@
 	</div>
 </div>
 
-@*password check *@
+
 @section Scripts {
     <script>
-        function validatePassword() {
+        function checkPasswordStrength() {
             var password = document.getElementById("RModel_Password").value;
-            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{12,}$/;
+            var criteriaMet = calculatePasswordStrength(password);
 
-            @*feedback on password*@
-            if (!passwordRegex.test(password)) {
-                document.getElementById("passwordError").innerHTML = "Password must include lowercase, uppercase, number, and special character.";
-                return false;
+            if (criteriaMet === 5) {
+                document.getElementById("passwordError").innerHTML = "";
+                updatePasswordStrength('strong');
+            } else {
+                var missingCriteria = getMissingCriteria(password);
+                document.getElementById("passwordError").innerHTML = "Password is missing: " + missingCriteria;
+
+                if (criteriaMet >= 3) {
+                    updatePasswordStrength('medium');
+                } else {
+                    updatePasswordStrength('weak');
+                }
+            }
+        }
+
+        function calculatePasswordStrength(password) {
+            var criteriaMet = 0;
+
+            // Check for uppercase
+            if (/[A-Z]/.test(password)) {
+                criteriaMet++;
             }
 
-            document.getElementById("passwordError").innerHTML = "";
-            return true;
+            // Check for lowercase
+            if (/[a-z]/.test(password)) {
+                criteriaMet++;
+            }
+
+            // Check for special character
+            if (/[!#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password)) {
+                criteriaMet++;
+            }
+
+            // Check for numbers
+            if (/\d/.test(password)) {
+                criteriaMet++;
+            }
+
+            // Check for length greater than or equal to 12
+            if (password.length >= 12) {
+                criteriaMet++;
+            }
+
+            return criteriaMet;
+        }
+
+        function getMissingCriteria(password) {
+            var missingCriteria = [];
+
+            // Check for missing uppercase
+            if (!/[A-Z]/.test(password)) {
+                missingCriteria.push("uppercase");
+            }
+
+            // Check for missing lowercase
+            if (!/[a-z]/.test(password)) {
+                missingCriteria.push("lowercase");
+            }
+
+            // Check for missing special character
+            if (!/[!#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password)) {
+                missingCriteria.push("special character");
+            }
+
+            // Check for missing numbers
+            if (!/\d/.test(password)) {
+                missingCriteria.push("numbers");
+            }
+
+            // Check for length less than 12
+            if (password.length < 12) {
+                missingCriteria.push("at least 12 characters");
+            }
+
+            return missingCriteria.join(", ");
+        }
+
+        function updatePasswordStrength(strength) {
+            var strengthElement = document.getElementById("passwordStrength");
+            strengthElement.innerHTML = "Password Strength: " + strength;
+
+            // Apply color based on strength
+            if (strength === 'weak') {
+                strengthElement.style.color = 'red';
+            } else if (strength === 'medium') {
+                strengthElement.style.color = 'orange';
+            } else {
+                strengthElement.style.color = 'green';
+            }
         }
     </script>
 }

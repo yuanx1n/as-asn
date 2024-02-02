@@ -21,13 +21,13 @@ builder.Services.AddScoped<AuditLogService>();
 builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
 
 //session management
-builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDistributedMemoryCache(); //save session in memory
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(3); // Set your desired session timeout duration
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
+    options.IdleTimeout = TimeSpan.FromSeconds(30);
 });
+
 
 var app = builder.Build();
 
